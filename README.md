@@ -1,8 +1,6 @@
 # dbt Semantic Model のリレーションを mermaid で可視化する
 
-## サンプル
-
-### ER 図
+## ER 図
 
 ```mermaid
 erDiagram
@@ -62,9 +60,9 @@ order_fact }o--|| user_dimension : "user_key"
 }}%%
 ```
 
-### dbt Semantic Model
+## dbt Semantic Model
 
-#### fct_order
+### fct_order
 
 ```yaml
 semantic_models:
@@ -123,7 +121,7 @@ metrics:
       measure: total_number_of_orders
 ```
 
-#### fct_access_daily
+### fct_access_daily
 
 ```yaml
 semantic_models:
@@ -178,7 +176,7 @@ metrics:
         - name: total_session
 ```
 
-#### dim_date
+### dim_date
 
 ```yaml
 semantic_models:
@@ -205,7 +203,7 @@ semantic_models:
         description: ""
 ```
 
-#### dim_product
+### dim_product
 
 ```yaml
 semantic_models:
@@ -230,7 +228,7 @@ semantic_models:
         description: ""
 ```
 
-#### dim_user
+### dim_user
 
 ```yaml
 semantic_models:
