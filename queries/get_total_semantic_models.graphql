@@ -1,0 +1,9 @@
+query Dimensions($environmentId: BigInt!) {
+  environment(id: $environmentId) {
+    definition {
+      semanticModels(first: 1) {
+        totalCount
+      }
+    }
+  }
+}

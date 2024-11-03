@@ -1,0 +1,25 @@
+query Dimensions($environmentId: BigInt!, $first: Int) {
+  environment(id: $environmentId) {
+    definition {
+      semanticModels(first: $first) {
+        edges {
+          node {
+            name
+            dimensions {
+              name
+              type
+            }
+            measures {
+              name
+              expr
+            }
+            entities {
+              name
+              type
+            }
+          }
+        }
+      }
+    }
+  }
+}

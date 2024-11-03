@@ -1,0 +1,14 @@
+# Ignore all files
+*
+
+# Whitelist
+!.gitignore
+!main.py
+!requirements.txt
+!README.md
+!queries/
+!queries/*
+!src/
+!src/__init__.py
+!src/dbt_client.py
+!src/erd_generator.py
