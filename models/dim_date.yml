@@ -1,0 +1,107 @@
+version: 2
+
+models:
+  - name: dim_date
+    description: "日付ディメンションテーブル"
+
+    config:
+      contract:
+        enforced: true
+
+    constraints:
+      - type: primary_key
+        columns:
+          - full_date
+
+    columns:
+      - name: date_key
+        data_type: int64
+        description: "サロゲートキー"
+        tests:
+          - not_null
+          - unique
+
+      - name: full_date
+        data_type: date
+        description: "日付"
+        tests:
+          - not_null
+
+      - name: year_and_month
+        data_type: int64
+        description: "年月"
+        tests:
+          - not_null
+
+semantic_models:
+  - name: date_dimension
+    model: ref('dim_date')
+    description: "日付ディメンションテーブル"
+
+    entities:
+      - name: date_key
+        type: primary
+        expr: date_key
+
+    dimensions:
+      - name: full_date
+        type: time
+        expr: full_date
+        type_params:
+          time_granularity: day
+        label: "日付"
+        description: ""
+
+      - name: year_and_month
+        type: categorical
+        expr: year_and_month
+        label: "年月"
+        description: ""
+
+  - name: order_date_dimension
+    model: ref('dim_date')
+    description: "注文日付ディメンションテーブル"
+
+    entities:
+      - name: order_date_key
+        type: primary
+        expr: date_key
+
+    dimensions:
+      - name: full_order_date
+        type: time
+        expr: full_date
+        type_params:
+          time_granularity: day
+        label: "注文日付"
+        description: ""
+
+      - name: order_year_and_month
+        type: categorical
+        expr: year_and_month
+        label: "注文年月"
+        description: ""
+
+  - name: first_order_date_dimension
+    model: ref('dim_date')
+    description: "初回注文日付ディメンションテーブル"
+
+    entities:
+      - name: first_order_date_key
+        type: primary
+        expr: date_key
+
+    dimensions:
+      - name: full_first_order_date
+        type: time
+        expr: full_date
+        type_params:
+          time_granularity: day
+        label: "初回注文日付"
+        description: ""
+
+      - name: first_order_year_and_month
+        type: categorical
+        expr: year_and_month
+        label: "初回注文年月"
+        description: ""

@@ -1,0 +1,55 @@
+version: 2
+
+models:
+  - name: dim_product
+    description: "商品ディメンションテーブル"
+
+    config:
+      contract:
+        enforced: true
+
+    constraints:
+      - type: primary_key
+        columns:
+          - product_id
+
+    columns:
+      - name: product_key
+        data_type: int64
+        description: "サロゲートキー"
+        tests:
+          - not_null
+          - unique
+
+      - name: product_id
+        data_type: string
+        description: "商品ID"
+        tests:
+          - not_null
+
+      - name: product_name
+        data_type: string
+        description: "商品名"
+        tests:
+          - not_null
+
+semantic_models:
+  - name: product_dimension
+    model: ref('dim_product')
+    description: "商品ディメンションテーブル"
+
+    entities:
+      - name: product_key
+        type: primary
+        expr: product_key
+
+    dimensions:
+      - name: product_id
+        type: categorical
+        label: "商品ID"
+        description: ""
+
+      - name: product_name
+        type: categorical
+        label: "商品名"
+        description: ""

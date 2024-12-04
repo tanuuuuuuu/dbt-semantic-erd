@@ -1,0 +1,101 @@
+version: 2
+
+models:
+  - name: fct_access_daily
+    description: "アクセス定期スナップショット・ファクトテーブル"
+    time_spine:
+      standard_granularity_column: snapshot_date
+
+    config:
+      contract:
+        enforced: true
+
+    constraints:
+      - type: primary_key
+        columns:
+          - date_key
+          - product_key
+
+    columns:
+      - name: access_daily_key
+        data_type: int64
+        description: "サロゲートキー"
+        tests:
+          - not_null
+          - unique
+
+      - name: date_key
+        data_type: int64
+        description: "サロゲートキー"
+        tests:
+          - not_null
+
+      - name: product_key
+        data_type: int64
+        description: "サロゲートキー"
+        tests:
+          - not_null
+
+      - name: snapshot_date
+        data_type: date
+        granularity: day
+        description: "日付"
+        tests:
+          - not_null
+
+      - name: session
+        data_type: int64
+        description: "セッション数"
+        tests:
+          - not_null
+
+semantic_models:
+  - name: access_daily_fact
+    model: ref('fct_access_daily')
+    description: "アクセス定期スナップショット・ファクトテーブル"
+    defaults:
+      agg_time_dimension: snapshot_date
+
+    entities:
+      - name: access_daily_key
+        type: primary
+        expr: access_daily_key
+
+      - name: date_key
+        type: foreign
+        expr: date_key
+
+      - name: product_key
+        type: foreign
+        expr: product_key
+
+    dimensions:
+      - name: snapshot_date
+        type: time
+        type_params:
+          time_granularity: day
+        label: "日付"
+        description: ""
+
+    measures:
+      - name: session
+        agg: sum
+        expr: session
+
+metrics:
+  - name: total_session
+    label: "セッション数"
+    description: ""
+    type: simple
+    type_params:
+      measure: session
+
+  - name: cvr
+    label: "CVR"
+    description: ""
+    type: derived
+    type_params:
+      expr: safe_divide(total_number_of_orders, total_session)
+      metrics:
+        - name: total_number_of_orders
+        - name: total_session

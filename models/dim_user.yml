@@ -1,0 +1,55 @@
+version: 2
+
+models:
+  - name: dim_user
+    description: "ユーザーディメンションテーブル"
+
+    config:
+      contract:
+        enforced: true
+
+    constraints:
+      - type: primary_key
+        columns:
+          - user_id
+
+    columns:
+      - name: user_key
+        data_type: int64
+        description: "サロゲートキー"
+        tests:
+          - not_null
+          - unique
+
+      - name: user_id
+        data_type: string
+        description: "ユーザーID"
+        tests:
+          - not_null
+
+      - name: user_name
+        data_type: string
+        description: "ユーザー名"
+        tests:
+          - not_null
+
+semantic_models:
+  - name: user_dimension
+    model: ref('dim_user')
+    description: "ユーザーディメンションテーブル"
+
+    entities:
+      - name: user_key
+        type: primary
+        expr: user_key
+
+    dimensions:
+      - name: user_id
+        type: categorical
+        label: "ユーザーID"
+        description: ""
+
+      - name: user_name
+        type: categorical
+        label: "ユーザー名"
+        description: ""

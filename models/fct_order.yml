@@ -1,0 +1,142 @@
+version: 2
+
+models:
+  - name: fct_order
+    description: "注文トランザクション・ファクトテーブル"
+    time_spine:
+      standard_granularity_column: order_date
+
+    config:
+      contract:
+        enforced: true
+
+    constraints:
+      - type: primary_key
+        columns:
+          - order_id
+          - order_item_no
+
+    columns:
+      - name: order_key
+        data_type: int64
+        description: "サロゲートキー"
+        tests:
+          - not_null
+          - unique
+
+      - name: order_date_key
+        data_type: int64
+        description: "サロゲートキー"
+        tests:
+          - not_null
+
+      - name: first_order_date_key
+        data_type: int64
+        description: "サロゲートキー"
+        tests:
+          - not_null
+
+      - name: product_key
+        data_type: int64
+        description: "サロゲートキー"
+        tests:
+          - not_null
+
+      - name: user_key
+        data_type: int64
+        description: "サロゲートキー"
+        tests:
+          - not_null
+
+      - name: order_id
+        data_type: string
+        description: "注文ID"
+        tests:
+          - not_null
+
+      - name: order_item_no
+        data_type: int64
+        description: "注文アイテム番号"
+        tests:
+          - not_null
+
+      - name: order_date
+        data_type: datetime
+        granularity: hour
+        description: "注文日時"
+        tests:
+          - not_null
+
+      - name: item_price
+        data_type: int64
+        description: "アイテム明細"
+
+semantic_models:
+  - name: order_fact
+    model: ref('fct_order')
+    description: "注文トランザクション・ファクトテーブル"
+    defaults:
+      agg_time_dimension: order_date
+
+    entities:
+      - name: order_key
+        type: primary
+        expr: order_key
+
+      - name: order_date_key
+        type: foreign
+        expr: order_date_key
+
+      - name: first_order_date_key
+        type: foreign
+        expr: first_order_date_key
+
+      - name: product_key
+        type: foreign
+        expr: product_key
+
+      - name: user_key
+        type: foreign
+        expr: user_key
+
+    dimensions:
+      - name: order_id
+        type: categorical
+        label: "注文ID"
+        description: ""
+
+      - name: order_item_no
+        type: categorical
+        label: "注文アイテム番号"
+        description: ""
+
+      - name: order_date
+        type: time
+        type_params:
+          time_granularity: day # hour
+        label: "注文日時"
+        description: ""
+
+    measures:
+      - name: item_price
+        agg: sum
+        expr: item_price
+
+      - name: number_of_orders
+        agg: count_distinct
+        expr: order_id
+
+metrics:
+  - name: total_number_of_orders
+    label: "注文件数"
+    description: ""
+    type: simple
+    type_params:
+      measure: number_of_orders
+
+  - name: total_item_price
+    label: "注文アイテム明細"
+    description: ""
+    type: simple
+    type_params:
+      measure: item_price
