@@ -1,6 +1,6 @@
 # dbt Semantic Layer の セマンティックモデルの関係性を mermaid.js の ER 図 で可視化する
 
-## 概要
+## リポジトリの概要
 
 dbt によるデータモデリングのプロジェクトにおいて、物理モデル（dbt Model）から論理モデル（Semantic Model）への変換を行う際、セマンティックモデル間の関係性を可視化するために、mermaid.js を利用して ER 図を描画する。
 
@@ -103,8 +103,8 @@ flowchart LR
     K & E & B & C & G & I & L
   end
 
-  classDef mdl stroke:#48a4db,stroke-width:2px,fill:#bae6fd;
-  classDef sem stroke:#f97583,stroke-width:2px,fill:#ff9eaa;
+  classDef mdl stroke:#48a4db,stroke-width:2px,fill:#bae6fd,color:black;
+  classDef sem stroke:#f97583,stroke-width:2px,fill:#ff9eaa,color:black;
 ```
 
 ### 変換後のモデル構造
